@@ -8,6 +8,7 @@ from swibots import BotApp
 from type import MeResponse
 from type import UserInput
 from type import UserResponse
+from type import SendMessageInput
 
 import asyncio
 from uvicorn import Config
@@ -41,6 +42,11 @@ async def get_user(user: Annotated[UserInput, Depends()]) -> UserResponse:
 async def about_manoedinata() -> UserResponse:
     about = await get_user(user=UserInput(username="manoedinata"))
     return about
+
+@app.post("/send_message")
+async def send_message(message: SendMessageInput):
+    send = await swibots.send_message(**message.model_dump())
+    return send.to_json()
 
 if __name__ == "__main__":
     # Uvicorn
